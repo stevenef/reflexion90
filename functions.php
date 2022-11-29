@@ -31,3 +31,14 @@ function divi_limit_revisions( $num ) {
 	$num = 3;
 	return $num;
 }
+
+// ERLAUBE SVG UPLOADS /////////////////////////////////////////////////////////////////
+add_filter('upload_mimes', 'allow_other_types');
+function allow_other_types($mimes) {
+	
+	$mimes['svg'] = 'image/svg+xml';
+	$mimes['ico'] = 'image/x-icon';
+	$mimes['ttf'] = 'application/ttf';
+
+	return $mimes;
+}
