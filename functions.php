@@ -32,13 +32,17 @@ function divi_limit_revisions( $num ) {
 	return $num;
 }
 
-// ERLAUBE SVG UPLOADS /////////////////////////////////////////////////////////////////
-add_filter('upload_mimes', 'allow_other_types');
-function allow_other_types($mimes) {
-	
-	$mimes['svg'] = 'image/svg+xml';
-	$mimes['ico'] = 'image/x-icon';
-	$mimes['ttf'] = 'application/ttf';
-
-	return $mimes;
-}
+// ERLAUBE UPLOADS /////////////////////////////////////////////////////////////////
+#
+# For this, see: wp-includes/capabilities.php > map_meta_cap()
+#
+function wpse_6533_map_unrestricted_upload_filter($caps, $cap) {
+	if ($cap == 'unfiltered_upload') {
+	  $caps = array();
+	  $caps[] = $cap;
+	}
+  
+	return $caps;
+  }
+  
+  add_filter('map_meta_cap', 'wpse_6533_map_unrestricted_upload_filter', 0, 2);
