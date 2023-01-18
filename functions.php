@@ -136,7 +136,8 @@ function bac_generate_tag_cloud($tags, $args = '')
             _n(' . var_export($args['single_text'], true) . ', ' . var_export($args['multiple_text'], true) . ', $count),
             number_format_i18n( $count ));';
 		//create_function — Create an anonymousfunction (http://php.net/manual/en/function.create-function.php)
-		$args['topic_count_text_callback'] = create_function('$count', $body);
+		$args['topic_count_text_callback'] = function ($count, $body) {
+		};
 	}
 	$args = wp_parse_args($args, $defaults);
 	//extract — Import variables into the current symbol table from an array (http://php.net/manual/en/function.extract.php)
@@ -155,9 +156,13 @@ function bac_generate_tag_cloud($tags, $args = '')
 		} else {
 			// SQL cannot save you; this is a second (potentially different) sort on a subset of data.
 			if ('name' == $orderby)
-				uasort($tags, create_function('$a, $b', 'return strnatcasecmp($a->name, $b->name);'));
+				uasort($tags, function ($a, $b) {
+					return strnatcasecmp($a->name, $b->name);
+				});
 			else
-				uasort($tags, create_function('$a, $b', 'return ($a->count > $b->count);'));
+				uasort($tags, function ($a, $b) {
+					return ($a->count > $b->count);
+				});
 
 			if ('DESC' == $order)
 				$tags = array_reverse($tags, true);
